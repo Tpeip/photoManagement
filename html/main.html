@@ -35,6 +35,20 @@
 		<script src="../js/mui.min.js"></script>
 		<script type="text/javascript" charset="utf-8">
 			mui.init();
+			var first = null;
+			mui.back = function() {
+				if (!first) {
+					first = new Date().getTime();
+					mui.toast('再按一次退出应用');
+					setTimeout(function() {
+						first = null;
+					}, 1000);
+				} else {
+					if (new Date().getTime() - first < 1000) {
+						plus.runtime.quit();
+					}
+				}
+			};
 			var subpages = ['tab-photos.html', 'tab-types.html', 'tab-persons.html'];
 			var subpage_style = {
 				top: '45px',
@@ -74,12 +88,12 @@
 			mui('.mui-bar-tab').on('tap', 'a', function(e) {
 				var targetTab = this.getAttribute('href');
 				//除首页选项卡，其他选项卡显示隐藏上传图标
-				// var uploader = document.getElementById('upload');
-// 				if(targetTab != subpages[0]){
-// 					uploader.classList.add('mui-hidden');
-// 				}else{
-// 					uploader.classList.remove('mui-hidden');
-// 				}
+				var uploader = document.getElementById('upload');
+				if (targetTab != subpages[0]) {
+					uploader.classList.add('mui-hidden');
+				} else {
+					uploader.classList.remove('mui-hidden');
+				}
 				if (targetTab == activeTab) {
 					return;
 				}
@@ -105,19 +119,19 @@
 				// console.log('activeTab',activeTab);
 			});
 			//自定义事件，模拟点击“首页选项卡”
-			
-// 			mui.plusReady(function(){
-// 				var defaultTab = document.getElementById("defaultTab");
-// 				//模拟首页点击
-// 				mui.trigger(defaultTab, 'tap');
-// 				//切换选项卡高亮
-// 				var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
-// 				if (defaultTab !== current) {
-// 					current.classList.remove('mui-active');
-// 					defaultTab.classList.add('mui-active');
-// 				}
-// 			});
-		    document.addEventListener('gohome', function() {
+
+			// 			mui.plusReady(function(){
+			// 				var defaultTab = document.getElementById("defaultTab");
+			// 				//模拟首页点击
+			// 				mui.trigger(defaultTab, 'tap');
+			// 				//切换选项卡高亮
+			// 				var current = document.querySelector(".mui-bar-tab>.mui-tab-item.mui-active");
+			// 				if (defaultTab !== current) {
+			// 					current.classList.remove('mui-active');
+			// 					defaultTab.classList.add('mui-active');
+			// 				}
+			// 			});
+			document.addEventListener('gohome', function() {
 				var defaultTab = document.getElementById("defaultTab");
 				//模拟首页点击
 				mui.trigger(defaultTab, 'tap');
@@ -129,7 +143,7 @@
 				}
 			});
 			//上传照片
-			document.getElementById('upload').addEventListener('tap',function(){
+			document.getElementById('upload').addEventListener('tap', function() {
 				mui.openWindow({
 					id: 'upload',
 					url: 'uploading.html',
@@ -140,7 +154,7 @@
 					}
 				})
 			});
-			document.getElementById('bars').addEventListener('tap',function(){
+			document.getElementById('bars').addEventListener('tap', function() {
 				mui.openWindow({
 					url: 'setting.html',
 					show: {

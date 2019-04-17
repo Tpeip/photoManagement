@@ -207,15 +207,6 @@
 				background-color: rgba(0, 0, 0, 0.6);
 			}
 
-			#popover {
-				width: 200px;
-				height: 100px;
-				background: red;
-				position: fixed;
-				top: 70%;
-				left: 50%;
-			}
-
 			.image-border {
 				width: 33%;
 				height: 128px;
@@ -241,8 +232,8 @@
 	</head>
 
 	<body id="photos">
-		<div class="mui-content">
-			<div id="image-content" class="mui-content-padded">
+		<div id="image-content" class="mui-content">
+			<div  class="mui-content-padded">
 				<!-- <div>
 				<p style="position:relative;left: 0px;" >
 					<img style= "position:absolute;clip:rect(0px 328px 262px 66px)" src="images/yuantiao.jpg" data-preview-src="" data-preview-group="1" data-desc="款式:红锦满天星1000粒+肥+生根粉"
@@ -272,7 +263,7 @@
 	<script src="../js/mui.min.js"></script>
 	<script src="../js/jquery.min.js"></script>
 	<script src="../js/mui.zoom.js"></script>
-	<script src="../js/mui.previewimage.js"></script>
+	<script src="../js/mui.previewimages.js"></script>
 	<script>
 		var image_template = document.getElementById('image-content');
 // 		window.addEventListener('refresh', function(event) {
@@ -281,12 +272,12 @@
 // 		});
 
 		mui.plusReady(function() {
-			var name = localStorage.getItem("user");
+			var user = localStorage.getItem("user");
 			// console.log("photo_name",name);
-			var src = 'http://192.168.1.114:3000/upload/' + name + '/';
+			var src = 'http://192.168.1.114:3000/upload/' + user + '/';
 			mui.ajax('http://192.168.1.114:3000/photoSearch', {
 				data: {
-					'user_name': name
+					'user_name': user
 				},
 				dataType: 'json',
 				type: 'get',

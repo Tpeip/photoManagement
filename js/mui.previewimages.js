@@ -61,19 +61,19 @@
 	var defaultGroupName = '__DEFAULT';
 	var div = document.createElement('div');
 	var imgId = 0;
-	var PreviewImage = function(options) {
-	// var PreviewImage = function(func1, func2) {
+	// var PreviewImage = function(options) {
+	var PreviewImage = function(func1, func2) {
 		this.options = $.extend(true, {
 			id: '__MUI_PREVIEWIMAGE',
 			zoom: true,
+			//header: '<span class="mui-preview-indicator"></span>',
 			header: '',
-			// header: '<a href="#popover"><span class="mui-preview-indicator" style="color:red;"></span></a>',
 			//footer: '';
 			footer: '<span></span>'
-			}, options || {});
-		// });
-		// this.func1 = func1;
-		// this.func2 = func2;
+			// }, options || {});
+		});
+		this.func1 = func1;
+		this.func2 = func2;
 		this.init();
 		this.initEvent();
 	};
@@ -127,7 +127,6 @@
 			}, 300));
 		};
 		var laterHideEvent = function() {
-			console.log("hidden");
 				if(show){
 					self.header.classList.add($.className('hidden'));
 					self.footer.classList.add($.className('hidden'));
@@ -140,7 +139,6 @@
 					show = true;
 				}
 		};
-		console.log("添加");
 		var laterDeleteEvent = function(){
 			var buttonAry = [{
 				title: '删除照片',
@@ -203,13 +201,11 @@
 				self.element.classList.remove($.className('preview-in'));
 				laterClose = null;
 			} else { //open  图片预览关闭添加laterCloseEvent事件
-			
 				self.loader.addEventListener('tap', laterHideEvent);
 				self.scroller.addEventListener('tap', laterHideEvent);
                 self.backer.addEventListener('tap', laterCloseEvent);
 				self.deleter.addEventListener('tap',laterDeleteEvent);
 				self.forwarder.addEventListener('tap',laterForwardEvent);
-				console.log("*******");
 			}
 		});
 		this.element.addEventListener('slide', function(e) {
@@ -469,7 +465,7 @@
 			itemHtml.push(itemStr.replace('{{className}}', className));
 		}
 		this.scroller.innerHTML = itemHtml.join('');
-		// this.scrollers = this.scroller.querySelector($.className('slide-item'));
+		this.scrollers = this.scroller.querySelector($.className('slide-item'));
 		this.element.style.display = 'block';
 		this.element.classList.add($.className('preview-in'));
 		this.lastIndex = currentIndex;
@@ -486,7 +482,7 @@
 		if (this.isShown()) {
 			return;
 		}
-		// this.func1(index);
+		this.func1(index);
 		if (typeof index === "number") {
 			group = group || defaultGroupName;
 			this.addImages(group, index); //刷新当前group
@@ -502,7 +498,7 @@
 		if (!this.isShown()) {
 			return;
 		}
-		// this.func2(index);
+		this.func2(index);
 		this.element.classList.remove($.className('preview-in'));
 		this.element.classList.add($.className('preview-out'));
 		var itemEl = this.scroller.querySelector($.classSelector('.slider-item:nth-child(' + (this.lastIndex + 1) + ')'));
@@ -537,11 +533,11 @@
 	};
 
 	var previewImageApi = null;
-	$.previewImage = function(options) {
-	// $.previewImage = function(func1, func2) {
+	// $.previewImage = function(options) {
+	$.previewImage = function(func1, func2) {
 		if (!previewImageApi) {
-			previewImageApi = new PreviewImage(options);
-			// previewImageApi = new PreviewImage(func1, func2);
+			//previewImageApi = new PreviewImage(options);
+			previewImageApi = new PreviewImage(func1, func2);
 		}
 		return previewImageApi;
 	};

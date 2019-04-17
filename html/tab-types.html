@@ -9,14 +9,6 @@
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link href="../css/mui.css" rel="stylesheet" />
 		<link href="../css/mui.min.css" rel="stylesheet" />
-		<script type="text/javascript" src="../js/mui.min.js"></script>
-		<script type="text/javascript" src="../js/mui.js"></script>
-		<script type="text/javascript" src="../js/common.js"></script>
-		<script type="text/javascript" src="../js/exif.js"></script>
-		<script type="text/javascript" src="../js/facepp_sdk.js"></script>
-		<script type="text/javascript" src="../js/jquery.min.js"></script>
-		<script type="text/javascript" src="../js/mui.zoom.js"></script>
-		<script type="text/javascript" src="../js/mui.previewimage.js"></script>
 		<style>
 			html,body {
 				background-color: #efeff4;
@@ -60,108 +52,127 @@
 			    width: 90%;
 			    bottom: 10px;
 			} */
-			#result{
-				position: absolute;
-				border: 1px solid #000000;
-				max-height: 100%;
-				max-width: 100%;
+			.label-font{
+				font-size: 14px;
 			}
-			#img{
-				position: relative;
-				max-height: 100%;
-				max-width: 100%;
+			.icon-style{
+				font-size: 18px;
+				color: #0062CC;
+				font-weight: bolder;
 			}
+			li{
+				display: inline;
+			}
+			.image-border {
+				padding: 10px 3px 20px 0;
+				width: 47%;
+				height: 205px;
+				display: inline-block;
+				margin: 10px 5px 20px 5px;
+				
+			}
+			
+			.images {
+				border-radius: 6px;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+			.label-photo-type{
+				font-size: 16px;
+				color: #555555;
+				padding-left: 4px;
+				letter-spacing: 1px;
+			}
+			
+			
 		</style>
 	</head>
 
 	<body>
-		<div class="mui-content">
-			<input type="file" id="file" name="file"/>
-			<div id="result">
-				<img id="img" src="" />
+		<div id="image-types-person" class="mui-content">
+			<div id="" class="mui-content-padded">
+				<label class="mui-icon mui-icon-paperplane icon-style"></label>
+				<label class="mui-tab-label label-font">人物</label>
+				<div>
+					<p class="image-border">
+						<img class="images" src="../images/muwu.jpg" />
+						<label class="label-photo-type">人物</label>
+						<label>10张</label>
+					</p>
+				</div>
 			</div>
-			<p>xkclsk</p>
-			<p>xkclsk</p>
-			<p>xkclsk</p>
-			<p>xkclsk</p>
-			<p>xkclsk</p>
-			<p style="text-indent: 0;">
-				<a href="#middlePopover" class="mui-btn mui-btn-primary mui-btn-block mui-btn-outlined" style="padding: 5px 20px;">打开弹出菜单</a>
-			</p>
-			<div id="middlePopover" class="mui-popover">
-				<!-- <div class="mui-popover-arrow"></div>
-				<div class="mui-scroll-wrapper">
-					<div class="mui-scroll"> -->
-						<ul class="mui-table-view">
-							<li class="mui-table-view-cell">
-								<a href="#">Item1</a>
-							</li>
-							<li class="mui-table-view-cell"><a href="#">Item2</a>
-							</li>
-							<li class="mui-table-view-cell"><a href="#">Item3</a>
-							</li>
-							<li class="mui-table-view-cell"><a href="#">Item4</a>
-							</li>
-							<li class="mui-table-view-cell"><a href="#">Item5</a>
-							</li>
-							<li class="mui-table-view-cell"><a href="#">Item6</a>
-							</li>
-							<li class="mui-table-view-cell"><a href="#">Item7</a>
-							</li>
-							<li class="mui-table-view-cell"><a href="#">Item8</a>
-							</li>
-							<li class="mui-table-view-cell"><a href="#">Item9</a>
-							</li>
-							<li class="mui-table-view-cell"><a href="#">Item10</a>
-							</li>
-						</ul>
-					<!-- </div>
-				</div> -->
+			<div class="mui-content-padded">
+				<label class="mui-icon mui-icon-paperplane icon-style"></label>
+				<label class="mui-tab-label label-font">类型</label>
+				<div id="types">
+					<!-- <p class="image-border">
+						<img id="phototype" class="images" src="../images/cbd.jpg" />
+						<label class="label-photo-type">风景</label>
+						<labe>2张</label>
+					</p>
+					<p class="image-border">
+						<img class="images" src="../images/muwu.jpg" />
+						<label class="label-photo-type">人物</label>
+						<labe>10张</label>
+					</p>
+					<p class="image-border">
+						<img class="images" src="../images/shuijiao.jpg" />
+						<label class="label-photo-type">动物</label>
+						<labe>8张</label>
+					</p> -->
+				</div>
 			</div>
-			
+
+
 		</div>
-		<script src="../js/mui.js"></script>
-		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/mui.js"></script>
+		<script type="text/javascript" src="../js/common.js"></script>
+		<script type="text/javascript" src="../js/exif.js"></script>
+		<script type="text/javascript" src="../js/facepp_sdk.js"></script>
+		<script type="text/javascript" src="../js/jquery.min.js"></script>
+		<script type="text/javascript" src="../js/mui.zoom.js"></script>
+		<script type="text/javascript" src="../js/mui.previewimage.js"></script>
 		<script type="text/javascript">
 			mui.init();
+			var user = localStorage.getItem('user');
+			console.log('user',user);
+			mui.plusReady(function() {
+				mui.get('http://192.168.1.114:3000/photoClassify',{
+						'user_name': user
+					},
+					function(data) {
+						// console.log('photoClassify_data', JSON.stringify(data));
+						for (var i in data) {
+							setHtml(data[i].image_name, data[i].image_type, data[i].image_num);
+						}
+					}, 'json'
+			);
+			});
 
-			function ProcessFile(e) {
-				var file = document.getElementById('file').files[0];
-				if (file) {
-
-					var reader = new FileReader();
-					reader.onload = function(event) {
-						var txt = event.target.result;
-						mui.plusReady(function(){
-							plus.storage.setItem("url",txt);
-						});
-						var img = document.getElementById("img");
-						img.src = txt;
-					};
-				}
-				reader.readAsDataURL(file);
+			function setHtml(name, type, num) {
+				var str = '';
+				var src = 'http://192.168.1.114:3000/upload/' + user + '/' + name;
+				str = '<div class="image-border" onclick="turnTo(\''+ type +'\')">'+				           
+					       '<img class="images" src="' + src + '" />'+
+						   '<label class="label-photo-type">' + type + '</label>'+'<br>'+
+						   '<label style="padding-left: 6px;letter-spacing: 1px;">' + num + '张</label>'+
+					   '</div>';
+			    jQuery("#types").append(str);
 			}
-
-			function contentLoaded() {
-				document.getElementById('file').addEventListener('change',
-					ProcessFile, false);
-			}
-			window.addEventListener("DOMContentLoaded", contentLoaded, false);
-			document.getElementById('img').addEventListener('tap', function(e) {
-				//console.log("==",e.target.attributes.src.value);
-				//var url_value = e.target.attributes.src.value;
-				// 				mui.plusReady(function(){
-				// 					plus.storage.setItem("url",url_value);
-				// 					console.log("set",plus.storage.getItem("url"));
-				// 				});
+			function turnTo(type){
+				localStorage.setItem('type','');
+				localStorage.setItem('type',type);
 				mui.openWindow({
-					url: 'tab-types-photo.html',
-					id: 'preview',
-					extras: {
-						//img_url: url_value
+					url: 'tab-types-photo.html',					
+					show: {
+						autoShow: true,
+						aniShow: 'slide-in-right',
+						duration: 200
 					}
 				});
-			});
+			}
 		</script>
 	</body>
 </html>

@@ -414,10 +414,10 @@
 		plus.gallery.pick(function(e) {
 			for (var i in e.files) {
 				var fileSrc = e.files[i];
-				console.log(e.files[i]);
+				// console.log(e.files[i]);
 				setFile(fileSrc);
 				setHtml(fileSrc);
-
+                console.log("choose photo");
 			}
 		}, function(e) {
 			console.log("取消选择图片");
@@ -449,7 +449,7 @@
 	function setFile(fileSrc) {
 		var image = new Image();
 		image.src = fileSrc;
-		console.log('****', image.src);
+		// console.log('****', image.src);
 		fileArr.push(image);
 	}
 

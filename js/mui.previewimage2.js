@@ -1,79 +1,19 @@
 (function($, window) {
 
 	var template =
-		'<div id="{{id}}" class="mui-slider mui-preview-image mui-fullscreen">'+
-			'<div class="mui-preview-header">'+
-				'<header id="header-nav" class="mui-bar mui-bar-nav">'+
-				'<div id="back"><a class="mui-icon mui-icon-left-nav mui-pull-left" style="font-size:28px;"></a></div>' +
-				'<a id="menu" class="mui-icon mui-icon-info mui-pull-right" style="font-size:28px;font-weight:bold;" href="#popover"></a>{{header}}' +
-				'</header>'+
-			'</div>'+
-			'<div class="mui-slider-group"></div>' +
-			'<div id="popover" class="mui-popover" style="height: 250px;">'+
-				'<div class="mui-popover-arrow"></div>'+
-				'<div>我是自定义位置弹出层</div>'+
-			'</div>'+
-			'<div class="mui-preview-footer mui-hidden" style="box-shadow:1px 1px 4px 1px #ccc inset">'+
-				'<div class="mui-content">'+
-					'<nav class="mui-bar mui-bar-tab">'+
-						'<a id="delete" class="mui-tab-item" style="text-align:center;vertical-align:middle;">'+
-							'<span class="mui-icon mui-icon-trash" style="font-size:32px;margin-bottom:14px;font-weight:bolder;"></span>'+
-						'</a>'+
-						'<a class="mui-tab-item" href=""></a>'+
-						'<a class="mui-tab-item" href=""></a>'+
-						'<a class="mui-tab-item" href=""></a>'+
-						'<a id="forward" class="mui-tab-item">'+
-							'<span class="mui-icon mui-icon-redo" style="font-size:32px;margin-bottom:14px;font-weight:bolder;"></span>'+
-						'</a>'+
-					'</nav>'+'{{footer}}'+
-				'</div>'+
-// 				'<div id="delete" class="mui-popover mui-popover-action mui-popover-bottom">'+
-// 					'<ul class="mui-table-view">'+
-// 						'<li class="mui-table-view-cell"><a href="#" style="color: #FF3B30;">删除</a></li>'+
-// 					'</ul>'+
-// 					'<ul class="mui-table-view">'+
-// 						'<li class="mui-table-view-cell"><a href="#delete"><b>取消</b></a></li>'+
-// 					'</ul>'+
-// 				'</div>'+
-// 				'<div id="forward" class="mui-popover mui-popover-action mui-popover-bottom">'+
-// 					'<ul class="mui-table-view">'+
-// 						'<li class="mui-table-view-cell"><a href="#">转发</a></li>'+
-// 						'<li class="mui-table-view-cell"><a href="#">打印</a></li>'+
-// 					'</ul>'+
-// 					'<ul class="mui-table-view">'+
-// 						'<li class="mui-table-view-cell"><a href="#forward"><b>取消</b></a></li>'+
-// 					'</ul>'+
-// 				'</div>'+
-			'</div>'+
-			'<div class="mui-preview-loading">'+
-				'<span class="mui-spinner mui-spinner-white"></span>'+
-			'</div>'+
-		'</div>';
-	//scroller
+		'<div id="{{id}}" class="mui-slider mui-preview-image mui-fullscreen"><div class="mui-preview-header">{{header}}</div><div class="mui-slider-group"></div><div class="mui-preview-footer mui-hidden">{{footer}}</div><div class="mui-preview-loading"><span class="mui-spinner mui-spinner-white"></span></div></div>';
 	var itemTemplate =
-		'<div id="slide" class="mui-slider-item mui-zoom-wrapper mui-color {{className}}">' +
-		'<div class="mui-zoom-scroller">' +
-		'<img src="{{src}}" data-preview-lazyload="{{lazyload}}" style="{{style}}" class="mui-zoom" >' +
-		'</div>' +
-		'<div id="div"></div>' +
-		// '{{content}}'+
-		'</div>';
+		'<div class="mui-slider-item mui-zoom-wrapper {{className}}"><div class="mui-zoom-scroller"><img src="{{src}}" data-preview-lazyload="{{lazyload}}" style="{{style}}" class="mui-zoom" ></div>{{content}}</div>';
 	var defaultGroupName = '__DEFAULT';
 	var div = document.createElement('div');
 	var imgId = 0;
 	var PreviewImage = function(options) {
-	// var PreviewImage = function(func1, func2) {
 		this.options = $.extend(true, {
 			id: '__MUI_PREVIEWIMAGE',
 			zoom: true,
-			header: '',
-			// header: '<a href="#popover"><span class="mui-preview-indicator" style="color:red;"></span></a>',
-			//footer: '';
-			footer: '<span></span>'
-			}, options || {});
-		// });
-		// this.func1 = func1;
-		// this.func2 = func2;
+			header: '<span class="mui-preview-indicator"></span>',
+			footer: ''
+		}, options || {});
 		this.init();
 		this.initEvent();
 	};
@@ -81,30 +21,17 @@
 	proto.init = function() {
 		var options = this.options;
 		var el = document.getElementById(this.options.id);
-		if (!el) { //el为空
+		if (!el) {
 			div.innerHTML = template.replace(/\{\{id\}\}/g, this.options.id).replace('{{header}}', options.header).replace(
 				'{{footer}}', options.footer);
 			document.body.appendChild(div.firstElementChild); //添加template
 			el = document.getElementById(this.options.id); //el获取到template区域
-			back = document.getElementById('back');
-			del = document.getElementById('delete');
-			forward = document.getElementById('forward');
 		}
 
-		this.element = el; //template区域
+		this.element = el;
 		this.scroller = this.element.querySelector($.classSelector('.slider-group'));
-// 		this.scrollers = this.element.querySelector($.classSelector('.slider-item'));
-// 		console.log(scrollers);
 		this.indicator = this.element.querySelector($.classSelector('.preview-indicator'));
 		this.loader = this.element.querySelector($.classSelector('.preview-loading'));
-		this.backer = back;
-		this.deleter = del;
-		this.forwarder = forward;
-		this.header = this.element.querySelector($.classSelector('.preview-header'));
-		// console.log("header",this.header);
-		this.footer = this.element.querySelector($.classSelector('.preview-footer'));
-		// this.header.classList.add($.className('hidden'));
-		//this.popover = this.element.querySelector($.classSelector('.popover'));
 		if (options.footer) {
 			this.element.querySelector($.classSelector('.preview-footer')).classList.remove($.className('hidden'));
 		}
@@ -113,103 +40,32 @@
 	proto.initEvent = function() {
 		var self = this;
 		$(document.body).on('tap', 'img[data-preview-src]', function() {
-			self.open(this);
+			self.open(this); //放大图片
 			return false;
 		});
-		var show = true;
 		var laterClose = null;
 		var laterCloseEvent = function() {
 			!laterClose && (laterClose = $.later(function() {
-// 				self.loader.removeEventListener('tap', laterCloseEvent);
-// 				self.scroller.removeEventListener('tap', laterCloseEvent);
-				self.close();  //点击图片后回到小图预览
-				self.backer.removeEventListener('tap', laterCloseEvent);
+				self.loader.removeEventListener('tap', laterCloseEvent);
+				self.scroller.removeEventListener('tap', laterCloseEvent);
+				self.close();
 			}, 300));
 		};
-		var laterHideEvent = function() {
-			console.log("hidden");
-				if(show){
-					self.header.classList.add($.className('hidden'));
-					self.footer.classList.add($.className('hidden'));
-					// self.scroller.style('background-color','black');
-					// self.scrollers.classList.remove($.className('mui-color'));
-					show = false;
-				}else{
-					self.header.classList.remove($.className('hidden'));
-					self.footer.classList.remove($.className('hidden'));
-					show = true;
-				}
-		};
-		console.log("添加");
-		var laterDeleteEvent = function(){
-			var buttonAry = [{
-				title: '删除照片',
-				style: 'destructive'
-			}];
-			plus.nativeUI.actionSheet({
-				cancel: '取消',
-				buttons: buttonAry
-			},function(event){
-				var index = event.index;
-				switch(index){
-					case 0:
-						break;
-					case 1:
-					    break;
-				}
-			});
-			this.classList.remove('mui-active');
-		};
-		var laterForwardEvent = function(){
-			var buttonAry = [
-				{
-					title: '分享',
-				},
-				{
-					title: '打印'
-				}
-				];
-			plus.nativeUI.actionSheet({
-				cancel: '取消',
-				buttons: buttonAry
-			},function(event){
-				var index = event.index;
-				switch(index){
-					case 0:
-						break;
-					case 1:
-					    break;
-					case 2:
-						break;
-				}
-			});
-			this.classList.remove('mui-active');
-		};
-		// 		this.scroller.addEventListener('tap',function(){
-		// 			this.footer.classList.add($.className('hidden'));
-		// 			this.header.classList.add($.className('hidden'));
-		// 		});
 		this.scroller.addEventListener('doubletap', function() {
 			if (laterClose) {
 				laterClose.cancel();
 				laterClose = null;
 			}
 		});
-		//在webkit搜索引擎中，当animate动画结束时执行
 		this.element.addEventListener('webkitAnimationEnd', function() {
 			if (self.element.classList.contains($.className('preview-out'))) { //close
 				self.element.style.display = 'none';
 				self.element.classList.remove($.className('preview-out'));
 				self.element.classList.remove($.className('preview-in'));
 				laterClose = null;
-			} else { //open  图片预览关闭添加laterCloseEvent事件
-			
-				self.loader.addEventListener('tap', laterHideEvent);
-				self.scroller.addEventListener('tap', laterHideEvent);
-                self.backer.addEventListener('tap', laterCloseEvent);
-				self.deleter.addEventListener('tap',laterDeleteEvent);
-				self.forwarder.addEventListener('tap',laterForwardEvent);
-				console.log("*******");
+			} else { //open
+				self.loader.addEventListener('tap', laterCloseEvent);
+				self.scroller.addEventListener('tap', laterCloseEvent);
 			}
 		});
 		this.element.addEventListener('slide', function(e) {
@@ -286,7 +142,6 @@
 			var offset = $.offset(img);
 			itemData.sTop = offset.top;
 			itemData.sLeft = offset.left;
-			//注释下面则滑动过程中禁止图片缩放
 			itemData.sScale = Math.max(itemData.sWidth / window.innerWidth, itemData.sHeight / window.innerHeight);
 		}
 		imgEl.style.webkitTransform = 'translate3d(0,0,0) scale(' + itemData.sScale + ')';
@@ -312,9 +167,6 @@
 		var itemEl = this.scroller.querySelector($.classSelector('.slider-item:nth-child(' + (index + 1) + ')'));
 		var itemData = this.currentGroup[index];
 		var imgEl = itemEl.querySelector('img');
-		//获取照片路径
-		currentPreviewSrc = imgEl.src;
-		// console.log("src", currentPreviewSrc);
 		this._initImgData(itemData, imgEl);
 		if (isOpening) {
 			var posi = this._getPosition(itemData);
@@ -448,18 +300,18 @@
 			}
 			itemStr = itemTemplate.replace('{{src}}', itemData.src).replace('{{lazyload}}', itemData.lazyload).replace(
 				'{{style}}', style);
-
-			// 			if (itemData.el.getAttribute('data-content') && itemData.el.getAttribute('data-content') != '') {
-			// 				if (itemData.el.getAttribute('data-desc') && itemData.el.getAttribute('data-desc') != '')
-			// 					itemStr = itemStr.replace('{{content}}', '<div class="mui-slider-img-content">' + itemData.el.getAttribute(
-			// 							"data-content") + "</br>" + "<div style='color:#A3A3A3;top:200px;width:100%;height:auto;word-break:break-all; '>" +
-			// 						itemData.el.getAttribute('data-desc') + "</div>" + '</div>');
-			// 				else
-			// 					itemStr = itemStr.replace('{{content}}', "<div class=\"mui-slider-img-content\">" + itemData.el.getAttribute(
-			// 						"data-content") + "</br>" + '</div>');
-			// 			} else
-			// 				itemStr = itemStr.replace('{{content}}', '');
-
+				
+			if (itemData.el.getAttribute('data-content') && itemData.el.getAttribute('data-content') != '') {
+				if (itemData.el.getAttribute('data-desc') && itemData.el.getAttribute('data-desc') != '')
+					itemStr = itemStr.replace('{{content}}', '<div class="mui-slider-img-content">' + itemData.el.getAttribute(
+							"data-content") + "</br>" + "<div style='color:#A3A3A3;top:200px;width:100%;height:auto;word-break:break-all; '>" +
+						itemData.el.getAttribute('data-desc') + "</div>" + '</div>');
+				else
+					itemStr = itemStr.replace('{{content}}', "<div class=\"mui-slider-img-content\">" + itemData.el.getAttribute(
+						"data-content") + "</br>" + '</div>');
+			} else
+				itemStr = itemStr.replace('{{content}}', '');
+				
 			if (from === index) {
 				currentIndex = i;
 				className = $.className('active');
@@ -469,7 +321,6 @@
 			itemHtml.push(itemStr.replace('{{className}}', className));
 		}
 		this.scroller.innerHTML = itemHtml.join('');
-		// this.scrollers = this.scroller.querySelector($.className('slide-item'));
 		this.element.style.display = 'block';
 		this.element.classList.add($.className('preview-in'));
 		this.lastIndex = currentIndex;
@@ -486,7 +337,6 @@
 		if (this.isShown()) {
 			return;
 		}
-		// this.func1(index);
 		if (typeof index === "number") {
 			group = group || defaultGroupName;
 			this.addImages(group, index); //刷新当前group
@@ -502,7 +352,6 @@
 		if (!this.isShown()) {
 			return;
 		}
-		// this.func2(index);
 		this.element.classList.remove($.className('preview-in'));
 		this.element.classList.add($.className('preview-out'));
 		var itemEl = this.scroller.querySelector($.classSelector('.slider-item:nth-child(' + (this.lastIndex + 1) + ')'));
@@ -538,10 +387,8 @@
 
 	var previewImageApi = null;
 	$.previewImage = function(options) {
-	// $.previewImage = function(func1, func2) {
 		if (!previewImageApi) {
 			previewImageApi = new PreviewImage(options);
-			// previewImageApi = new PreviewImage(func1, func2);
 		}
 		return previewImageApi;
 	};
